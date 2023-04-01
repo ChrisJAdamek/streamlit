@@ -4,7 +4,7 @@ import streamlit as st
 import openai
 
 # Set up OpenAI API
-openai.api_key = os.environ["OPENAI_API_KEY"]
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # Streamlit app
 st.title("Streamlit OpenAI App")
