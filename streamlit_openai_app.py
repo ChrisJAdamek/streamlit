@@ -6,8 +6,6 @@ import openai
 # Set up OpenAI API
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-# Define the function to send a message to OpenAI
-
 def send_message_to_openai(prompt, max_tokens, temperature, engine):
     headers = {
         'Content-Type': 'application/json',
@@ -44,7 +42,6 @@ def send_message_to_openai(prompt, max_tokens, temperature, engine):
 
     return response.choices[0].text.strip()
 
-# Custom CSS for the app
 custom_css = """
 <style>
     body {
@@ -60,15 +57,29 @@ custom_css = """
     .accessible-text {
         color: #4a4a4a;
     }
+    .user-bubble {
+        background-color: #34C759;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 1rem;
+        max-width: 75%;
+        color: white;
+    }
+    .pirate-bubble {
+        background-color: #0A84FF;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 1rem;
+        max-width: 75%;
+        color: white;
+    }
 </style>
 """
 
 st.markdown(custom_css, unsafe_allow_html=True)
 
-# Load custom font
 st.markdown("<link href='https://fonts.googleapis.com/css?family=Pirata+One' rel='stylesheet'>", unsafe_allow_html=True)
 
-# Streamlit app starts here
 st.markdown("<h1 tabindex='0'>Pirate Chatbot</h1>", unsafe_allow_html=True)
 
 if 'chat_history' not in st.session_state:
@@ -87,14 +98,16 @@ if st.button("Send"):
     if user_message:
         combined_prompt = f"{pre_prompt} {user_message}"
         st.session_state.chat_history.append({"role": "user", "message": user_message})
-
         with st.spinner("Waitin' for a pirate's response..."):
             response = send_message_to_openai(combined_prompt, max_tokens, temperature, engine)
 
         if response:
             st.session_state.chat_history.append({"role": "pirate", "message": response})
+
 for chat in st.session_state.chat_history:
     if chat["role"] == "user":
-        st.markdown(f"<div style='background-color: #caf0f8; padding: 1rem; margin-bottom: 0.5rem; border-radius: 10px;' tabindex='0'>{chat['message']}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='user-bubble' tabindex='0'>{chat['message']}</div>", unsafe_allow_html=True)
     else:
-        st.markdown(f"<div style='background-image: url(https://wallpapercave.com/wp/JNn0uaC.jpg); padding: 1rem; margin-bottom: 0.5rem; color: white; font-size: 1.2rem; border-radius: 10px;' tabindex='0' role='img' aria-label='Pirate response'><div class='accessible-text'>{chat['message']}</div></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='pirate-bubble' tabindex='0'>{chat['message']}</div>", unsafe_allow_html=True)
+
+
