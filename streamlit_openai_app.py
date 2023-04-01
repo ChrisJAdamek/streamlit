@@ -48,7 +48,6 @@ def send_message_to_openai(prompt, user_message, max_tokens, temperature, engine
 st.set_page_config(page_title="Thesis Review", layout="wide")
 
 def main():
-
     user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
     st.markdown("""<style>
         .chat-container {
@@ -69,7 +68,7 @@ def main():
         st.write('</div>', unsafe_allow_html=True)
 
     control_container = cols[1].container()
-    with control_container:  
+    with control_container:
         with st.expander("Advanced Settings", expanded=False):
             max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
             temperature = st.slider("Temperature:", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
@@ -81,6 +80,8 @@ def main():
                     "gpt-4-32k",
                 ),
             )
+    # Return user_message at the end of the main function
+    return user_message
 
 if st.button("Send"):
     if user_message:
@@ -105,6 +106,27 @@ if __name__ == "__main__":
         st.session_state.chat_history = []
     if "user_input" not in st.session_state:
         st.session_state.user_input = ""
-    main()
+    
+    # Get the user_message from the main function
+    user_message = main()
+
+if st.button("Send"):
+    if user_message:
+        st.session_state.chat_history.append({"role": "user", "message": user_message})
+        combined_prompt = f"{get_pre_prompt()} {user_message}"
+        with st.spinner("Waitin' for a pirate's response..."):
+            try:
+                response = send_message_to_openai(combined_prompt, user_message, max_tokens, temperature, engine)
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+                response = ""
+
+        if response:
+            st.session_state.chat_history.append({"role": "pirate", "message": response})
+
+        # Clear the user message input
+        st.session_state.user_input = ""
+        st.experimental_rerun()
+
 
 
