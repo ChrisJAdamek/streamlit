@@ -16,16 +16,21 @@ def send_message_to_openai(prompt, max_tokens, temperature, engine):
 
     data = {
         'model': engine,
-        'prompt': prompt,
+        'messages': [{"role": "system", "content": pre_prompt}, {"role": "user", "content": user_message}],
         'max_tokens': max_tokens,
         'n': 1,
         'temperature': temperature,
     }
 
-    response = requests.post('https://api.openai.com/v1/engines/davinci-codex/completions', headers=headers, json=data)
-    response.raise_for_status()
-
-    return response.json()['choices'][0]['text'].strip()
+    try:
+        response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=data)
+        response.raise_for_status()
+        return response.json()['choices'][0]['message']['content'].strip()
+    except Exception as e:
+        st.error(f"Error: {str(e)}")
+        if hasattr(e, 'response') and e.response is not None:
+            st.error(f"Error details: {e.response.text}")
+        return ""
 
 session_state = SessionState(chat_history=[])
 
@@ -47,8 +52,15 @@ user_message = st.text_area("Enter your message:", key="user_input")
 with st.expander("Advanced Settings", expanded=False):
     max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
     temperature = st.slider("Temperature:", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
-    engine = st.selectbox("Select a language model:", ("davinci-codex", "text-davinci-002", "text-curie-003", "text-babbage-001"))
-
+    engine = st.selectbox(
+        "Select a language model:",
+        (
+            "gpt-3.5-turbo",
+            "gpt-4",
+            "gpt-4-32k",
+            # You can add other models here if you'd like
+        ),
+    )
 if st.button("Send"):
     if user_message:
         combined_prompt = f"{pre_prompt} {user_message}"
