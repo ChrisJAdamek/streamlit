@@ -127,6 +127,3 @@ if st.button("Send"):
         # Clear the user message input
         st.session_state.user_input = ""
         st.experimental_rerun()
-
-
-
