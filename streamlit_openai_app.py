@@ -70,33 +70,34 @@ def main():
     with control_container:
         user_message = st.text_area("Enter your message:", key="user_input")
 
-            with st.expander("Advanced Settings", expanded=False):
-                max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
-                temperature = st.slider("Temperature:", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
-                engine = st.selectbox(
-                    "Select a language model:",
-                    (
-                        "gpt-3.5-turbo",
-                        "gpt-4",
-                        "gpt-4-32k",
-                    ),
-                )
+        with st.expander("Advanced Settings", expanded=False):
+            max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
+            temperature = st.slider("Temperature:", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
+            engine = st.selectbox(
+                "Select a language model:",
+                (
+                    "gpt-3.5-turbo",
+                    "gpt-4",
+                    "gpt-4-32k",
+                ),
+            )
 
-            if st.button("Send"):
-                if user_message:
-                    combined_prompt = f"{get_pre_prompt()} {user_message}"
-                    st.session_state.chat_history.append({"role": "user", "message": user_message})
-                    with st.spinner("Waitin' for a pirate's response..."):
-                        try:
-                            response = send_message_to_openai(combined_prompt, user_message, max_tokens, temperature, engine)
-                        except Exception as e:
-                            st.error(f"Error: {str(e)}")
-                            response = ""
+        if st.button("Send"):
+            if user_message:
+                combined_prompt = f"{get_pre_prompt()} {user_message}"
+                st.session_state.chat_history.append({"role": "user", "message": user_message})
+                with st.spinner("Waitin' for a pirate's response..."):
+                    try:
+                        response = send_message_to_openai(combined_prompt, user_message, max_tokens, temperature, engine)
+                    except Exception as e:
+                        st.error(f"Error: {str(e)}")
+                        response = ""
 
-                    if response:
-                        st.session_state.chat_history.append({"role": "pirate", "message": response})
+                if response:
+                    st.session_state.chat_history.append({"role": "pirate", "message": response})
 
 if __name__ == "__main__":
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
     main()
+
