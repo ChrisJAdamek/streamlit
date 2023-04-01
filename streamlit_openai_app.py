@@ -48,9 +48,9 @@ def send_message_to_openai(prompt, user_message, max_tokens, temperature, engine
 st.set_page_config(page_title="Thesis Review", layout="wide")
 
 def main():
-    user_message = st.text_area("Enter your message:", key="user_input")
+    st.set_page_config(page_title="Thesis Review", layout="wide")
 
-
+    user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
     st.markdown("""<style>
         .chat-container {
             max-height: 500px;
@@ -101,10 +101,13 @@ if st.button("Send"):
 
         # Clear the user message input
         st.session_state.user_input = ""
-        st.session_state.user_input = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
+        st.experimental_rerun()
 
 if __name__ == "__main__":
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
+    if "user_input" not in st.session_state:
+        st.session_state.user_input = ""
     main()
+
 
