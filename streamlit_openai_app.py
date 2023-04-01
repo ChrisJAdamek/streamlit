@@ -27,10 +27,6 @@ def send_message_to_openai(prompt, max_tokens, temperature, engine):
 
     return response.json()['choices'][0]['text'].strip()
 
-st.markdown(custom_css, unsafe_allow_html=True)
-
-st.title("Pirate Chatbot")
-
 session_state = SessionState(chat_history=[])
 
 pre_prompt = '''You are a scholar of logical reasoning. You specialize in propositional logic. Your job is to critically analyze the thesis statement submitted by students and provide advice on the logical validity and soundness of the thesis. Let's take this step by step as follows:
