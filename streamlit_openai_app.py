@@ -62,4 +62,4 @@ if user_message:
     response = send_message_to_openai(combined_prompt, max_tokens, temperature)
 
     # Display the response in a container with a pirate-themed background
-    st.markdown(f"<div style='background-image: url(https://i.imgur.com/3CgjYd4.jpg); padding: 2rem; color: white; font-size: 1.2rem; border-radius: 10px;'>{response}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='background-image: url(https://wallpapercave.com/wp/JNn0uaC.jpg); padding: 2rem; color: white; font-size: 1.2rem; border-radius: 10px;'>{response}</div>", unsafe_allow_html=True)
