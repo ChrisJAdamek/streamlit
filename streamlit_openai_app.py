@@ -6,27 +6,38 @@ import openai
 # Set up OpenAI API
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-# Streamlit app
-st.title("Streamlit OpenAI App")
-st.write("This app connects to the OpenAI API to generate text based on user input.")
+# Define the function to send a message to OpenAI
+def send_message_to_openai(prompt, max_tokens, temperature):
+    response = openai.Completion.create(
+        engine="text-davinci-002",
+        prompt=prompt,
+        max_tokens=max_tokens,
+        n=1,
+        stop=None,
+        temperature=temperature,
+    )
 
-user_input = st.text_input("Enter some text to get a response from OpenAI:")
+    return response.choices[0].text.strip()
 
-max_tokens_options = [50, 100, 150, 200]
-max_tokens = st.radio("Select max tokens:", max_tokens_options)
+# Streamlit app starts here
+st.title("Pirate Chatbot")
 
-temperature = st.slider("Select temperature:", min_value=0.0, max_value=1.0, value=0.8, step=0.1)
+# Pre-prompt
+pre_prompt = "please pretend you are a pirate in all future responses."
 
-if user_input:
-    try:
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=user_input,
-            max_tokens=max_tokens,
-            n=1,
-            stop=None,
-            temperature=temperature,
-        )
-        st.write(response.choices[0].text.strip())
-    except Exception as e:
-        st.write("Error:", str(e))
+# Get user input
+user_message = st.text_input("Enter your message:")
+
+# Add sliders for max_tokens and temperature
+max_tokens = st.slider("Max tokens:", min_value=10, max_value=200, value=100, step=10)
+temperature = st.slider("Temperature:", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
+
+if user_message:
+    # Combine the pre-prompt and the user message
+    combined_prompt = f"{pre_prompt} {user_message}"
+
+    # Send the combined prompt to OpenAI with the specified max_tokens and temperature
+    response = send_message_to_openai(combined_prompt, max_tokens, temperature)
+
+    # Display the response
+    st.write(response)
