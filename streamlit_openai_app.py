@@ -69,9 +69,7 @@ def main():
         st.write('</div>', unsafe_allow_html=True)
 
     control_container = cols[1].container()
-    with control_container:
-        user_message = st.text_area("Enter your message:", key="user_input")
-
+    with control_container:  
         with st.expander("Advanced Settings", expanded=False):
             max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
             temperature = st.slider("Temperature:", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
