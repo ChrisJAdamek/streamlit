@@ -17,7 +17,7 @@ def send_message_to_openai(prompt, max_tokens, temperature, engine):
     try:
         if engine == "gpt-3.5-turbo":
             data = {
-                'engine': engine,
+                'model': engine,
                 'messages': [{"role": "system", "content": pre_prompt}, {"role": "user", "content": user_message}],
                 'max_tokens': max_tokens,
                 'n': 1,
@@ -41,7 +41,6 @@ def send_message_to_openai(prompt, max_tokens, temperature, engine):
         if hasattr(e, 'response') and e.response is not None:
             st.error(f"Error details: {e.response.text}")
         return ""
-
 
     return response.choices[0].text.strip()
 
