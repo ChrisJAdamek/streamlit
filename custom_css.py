@@ -34,3 +34,7 @@ custom_css = """
     }
 </style>
 """
+
+st.markdown(custom_css, unsafe_allow_html=True)
+
+st.markdown("<link href='https://fonts.googleapis.com/css?family=Pirata+One' rel='stylesheet'>", unsafe_allow_html=True
