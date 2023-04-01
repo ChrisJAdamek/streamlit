@@ -1,6 +1,7 @@
 import os
 import requests
 import streamlit as st
+from streamlit import SessionState
 import openai
 
 # Set up OpenAI API
@@ -85,22 +86,20 @@ st.markdown("<link href='https://fonts.googleapis.com/css?family=Pirata+One' rel
 
 st.markdown("<h1 tabindex='0'>Pirate Chatbot</h1>", unsafe_allow_html=True)
 
-if 'chat_history' not in st.session_state:
-    st.session_state.chat_history = []
+session_state = SessionState.get(chat_history=[])
 
 pre_prompt = '''You are a scholar of logical reasoning. You specialize in propositional logic. Your job is to critically analyze the thesis statement submitted by students and provide advice on the logical validity and soundness of the thesis. Let's take this step by step as follows:
 
 1. Print: "Please submit your thesis statement for review."
 2. When the student submits a thesis statement, print: "Validity and Soundness of Thesis Statement".
 3. List of all propositions contained in the thesis statement (noting whether each is a premise or a conclusion).
-4. List any unstated assumptions underlying the argument.
+4. List anyunstated assumptions underlying the argument.
 5. For each premise and unstated assumption,print a heading "[the premise/assumption statements]" and then:
 
 List the key concepts that are necessary to understand the [premise/assumption] (including technical terms, subject background, and any relevant academic theories).
 Print: "This [premise/assumption] is sound because [insert a list of two or more true statements that each prove or infer the truth of the premise/assumption]".
 Print: "This [premise/assumption] may be unsound because [insert a list of two or more true statement that each disprove or undermine the truth of the premise/assumption]".
 Print: "This [premise/assumption] can be tested by [insert list of two or more empirical methods for testing the truth of the premise/assumption]".'''
-
 
 user_message = st.text_area("Enter your message:", key="user_input")
 
@@ -112,16 +111,17 @@ with st.expander("Advanced Settings", expanded=False):
 if st.button("Send"):
     if user_message:
         combined_prompt = f"{pre_prompt} {user_message}"
-        st.session_state.chat_history.append({"role": "user", "message": user_message})
+        session_state.chat_history.append({"role": "user", "message": user_message})
         with st.spinner("Waitin' for a pirate's response..."):
             response = send_message_to_openai(combined_prompt, max_tokens, temperature, engine)
         if response:
-            st.session_state.chat_history.append({"role": "pirate", "message": response})
+            session_state.chat_history.append({"role": "pirate", "message": response})
 
 chat_container = st.container()
-for chat in st.session_state.chat_history:
+for chat in session_state.chat_history:
     with chat_container:
         if chat["role"] == "user":
             st.write(chat['message'], class_='user-bubble')
         else:
             st.write(chat['message'], class_='pirate-bubble')
+
