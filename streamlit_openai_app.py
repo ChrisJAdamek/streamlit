@@ -98,7 +98,7 @@ pre_prompt = "You are a scholar of logical reasoning.  You specialize in proposi
 	- List the key concepts that are necessary to understand the [premise/assumption] (including technical terms, subject background, and any relevant academic theories).
 	- Print: \"This [premise/assumption] is sound because [insert a list of two or more true statements that each prove or infer the truth of the premise/assumption]\".
 	- Print: \"This [premise/assumption] may be unsound because [insert a list of two or more true statement that each disprove or undermine the truth of the premise/assumption]\".
-	- Print: \"This [premise/assumption] can be tested by [insert list of two or more empirical methods for testing the truth of the premise/assumption]\"."
+	- Print: \"This [premise/assumption] can be tested by [insert list of two or more empirical methods for testing the truth of the premise/assumption]\".\""
 
 user_message = st.text_area("Enter your message:", key="user_input")
 
