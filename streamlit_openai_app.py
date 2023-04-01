@@ -46,6 +46,9 @@ st.title("Pirate Chatbot")
 # Pre-prompt
 pre_prompt = "please pretend you are a pirate in all future responses."
 
+# Initialize an empty list to store chat history
+chat_history = []
+
 # Get user input
 user_message = st.text_input("Enter your message:")
 
@@ -58,8 +61,20 @@ if user_message:
     # Combine the pre-prompt and the user message
     combined_prompt = f"{pre_prompt} {user_message}"
 
-    # Send the combined prompt to OpenAI with the specified max_tokens and temperature
-    response = send_message_to_openai(combined_prompt, max_tokens, temperature)
+    # Add user message to chat history
+    chat_history.append({"role": "user", "message": user_message})
 
-    # Display the response in a container with a pirate-themed background
-    st.markdown(f"<div style='background-image: url(https://wallpapercave.com/wp/JNn0uaC.jpg); padding: 2rem; color: white; font-size: 1.2rem; border-radius: 10px;'>{response}</div>", unsafe_allow_html=True)
+    # Show loading indicator
+    with st.spinner("Waitin' for a pirate's response..."):
+        # Send the combined prompt to OpenAI with the specified max_tokens and temperature
+        response = send_message_to_openai(combined_prompt, max_tokens, temperature)
+
+    # Add response to chat history
+    chat_history.append({"role": "pirate", "message": response})
+
+    # Display chat history
+    for chat in chat_history:
+        if chat["role"] == "user":
+            st.markdown(f"<div style='background-color: #caf0f8; padding: 1rem; margin-bottom: 0.5rem; border-radius: 10px;'>{chat['message']}</div>", unsafe_allow_html=True)
+        else:
+            st.markdown(f"<div style='background-image: url(https://wallpapercave.com/wp/JNn0uaC.jpg); padding: 1rem; margin-bottom: 0.5rem; color: white; font-size: 1.2rem; border-radius: 10px;'>{chat['message']}</div>", unsafe_allow_html=True)
