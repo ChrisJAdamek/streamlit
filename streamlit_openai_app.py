@@ -47,46 +47,56 @@ def send_message_to_openai(prompt, user_message, max_tokens, temperature, engine
 
 def main():
     st.set_page_config(page_title="Thesis Review", layout="wide")
-    user_message = st.text_area("Enter your message:", key="user_input")
+    
+    st.markdown("""<style>
+        .chat-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+    </style>""", unsafe_allow_html=True)
 
-    with st.expander("Advanced Settings", expanded=False):
-        max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
-        temperature = st.slider("Temperature:", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
-        engine = st.selectbox(
-            "Select a language model:",
-            (
-                "gpt-3.5-turbo",
-                "gpt-4",
-                "gpt-4-32k",
-                # You can add other models here if you'd like
-            ),
-        )
-    if st.button("Send"):
-        if user_message:
-            combined_prompt = f"{get_pre_prompt()} {user_message}"
-            st.session_state.chat_history.append({"role": "user", "message": user_message})
-            with st.spinner("Waitin' for a pirate's response..."):
-                try:
-                    response = send_message_to_openai(combined_prompt, user_message, max_tokens, temperature, engine)
-                except Exception as e:
-                    st.error(f"Error: {str(e)}")
-                    response = ""
+    with st.columns(2) as cols:
+        chat_container = cols[0].container()
+        with chat_container:
+            st.write('<div class="chat-container">', unsafe_allow_html=True)
+            for chat in st.session_state.chat_history:
+                if chat["role"] == "user":
+                    st.write(f'<div class="message"><span>{chat["message"]}</span></div>', unsafe_allow_html=True)
+                else:
+                    st.write(f'<div class="message"><span>{chat["message"]}</span></div>', unsafe_allow_html=True)
+            st.write('</div>', unsafe_allow_html=True)
 
-            if response:
-                st.session_state.chat_history.append({"role": "pirate", "message": response})
+        control_container = cols[1].container()
+        with control_container:
+            user_message = st.text_area("Enter your message:", key="user_input")
 
-    chat_container = st.container()
-    with chat_container:
-        st.write('<div class="chat-container">', unsafe_allow_html=True)
-        for chat in st.session_state.chat_history:
-            if chat["role"] == "user":
-                st.write(f'<div class="message"><span>{chat["message"]}</span></div>', unsafe_allow_html=True)
-            else:
-                st.write(f'<div class="message"><span>{chat["message"]}</span></div>', unsafe_allow_html=True)
-        st.write('</div>', unsafe_allow_html=True)
+            with st.expander("Advanced Settings", expanded=False):
+                max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
+                temperature = st.slider("Temperature:", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
+                engine = st.selectbox(
+                    "Select a language model:",
+                    (
+                        "gpt-3.5-turbo",
+                        "gpt-4",
+                        "gpt-4-32k",
+                    ),
+                )
+
+            if st.button("Send"):
+                if user_message:
+                    combined_prompt = f"{get_pre_prompt()} {user_message}"
+                    st.session_state.chat_history.append({"role": "user", "message": user_message})
+                    with st.spinner("Waitin' for a pirate's response..."):
+                        try:
+                            response = send_message_to_openai(combined_prompt, user_message, max_tokens, temperature, engine)
+                        except Exception as e:
+                            st.error(f"Error: {str(e)}")
+                            response = ""
+
+                    if response:
+                        st.session_state.chat_history.append({"role": "pirate", "message": response})
 
 if __name__ == "__main__":
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
     main()
-
