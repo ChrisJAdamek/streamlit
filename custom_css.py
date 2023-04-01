@@ -26,21 +26,19 @@ custom_css = """
     color: #00ff00;
     white-space: nowrap;
     overflow: hidden;
-    animation: typing 2s steps(30, end), blink-caret 0.5s step-end infinite;
+  }
+
+  .message span {
+    display: inline-block;
+    animation: typing 2s steps(30, end) forwards;
   }
 
   @keyframes typing {
-    from {
+    0% {
       width: 0;
     }
-    to {
+    100% {
       width: 100%;
-    }
-  }
-
-  @keyframes blink-caret {
-    50% {
-      border-color: transparent;
     }
   }
 </style>
