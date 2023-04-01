@@ -5,7 +5,6 @@ class SessionState:
 import os
 import requests
 import streamlit as st
-from streamlit import SessionState
 import openai
 
 
