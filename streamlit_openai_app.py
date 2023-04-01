@@ -6,7 +6,7 @@ from session_state import SessionState
 from custom_css import custom_css
 
 # Set up OpenAI API
-openai.api_key = os.environ["OPENAI_API_KEY"]
+openai.api_key = st.secret["OPENAI_API_KEY"]
 
 def send_message_to_openai(prompt, max_tokens, temperature, engine):
     headers = {
