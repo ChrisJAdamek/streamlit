@@ -36,6 +36,9 @@ custom_css = """
         font-family: 'Pirata One', cursive;
         font-size: 3rem;
     }
+    .accessible-text {
+        color: #4a4a4a;
+    }
 </style>
 """
 
@@ -45,14 +48,14 @@ st.markdown(custom_css, unsafe_allow_html=True)
 st.markdown("<link href='https://fonts.googleapis.com/css?family=Pirata+One' rel='stylesheet'>", unsafe_allow_html=True)
 
 # Streamlit app starts here
-st.title("Pirate Chatbot")
+st.markdown("<h1 tabindex='0'>Pirate Chatbot</h1>", unsafe_allow_html=True)
 
 if 'chat_history' not in st.session_state:
     st.session_state.chat_history = []
 
 pre_prompt = "please pretend you are a pirate in all future responses."
 
-user_message = st.text_input("Enter your message:")
+user_message = st.text_input("Enter your message:", key="user_input")
 
 with st.expander("Advanced Settings", expanded=False):
     max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
@@ -71,6 +74,6 @@ if st.button("Send"):
 
 for chat in st.session_state.chat_history:
     if chat["role"] == "user":
-        st.markdown(f"<div style='background-color: #caf0f8; padding: 1rem; margin-bottom: 0.5rem; border-radius: 10px;'>{chat['message']}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='background-color: #caf0f8; padding: 1rem; margin-bottom: 0.5rem; border-radius: 10px;' tabindex='0'>{chat['message']}</div>", unsafe_allow_html=True)
     else:
-        st.markdown(f"<div style='background-image: url(https://wallpapercave.com/wp/JNn0uaC.jpg); padding: 1rem; margin-bottom: 0.5rem; color: white; font-size: 1.2rem; border-radius: 10px;'>{chat['message']}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='background-image: url(https://wallpapercave.com/wp/JNn0uaC.jpg); padding: 1rem; margin-bottom: 0.5rem; color: white; font-size: 1.2rem; border-radius: 10px;' tabindex='0' role='img' aria-label='Pirate response'><div class='accessible-text'>{chat['message']}</div></div>", unsafe_allow_html=True)
