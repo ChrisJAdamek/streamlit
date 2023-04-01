@@ -7,17 +7,25 @@ import openai
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # Define the function to send a message to OpenAI
+
 def send_message_to_openai(prompt, max_tokens, temperature, engine):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {openai.api_key}'
+    }
+
     try:
         if engine == "gpt-3.5-turbo":
-            response = openai.ChatCompletion.create(
-                engine=engine,
-                messages=[{"role": "system", "content": pre_prompt}, {"role": "user", "content": user_message}],
-                max_tokens=max_tokens,
-                n=1,
-                temperature=temperature,
-            )
-            return response.choices[0].message['content'].strip()
+            data = {
+                'engine': engine,
+                'messages': [{"role": "system", "content": pre_prompt}, {"role": "user", "content": user_message}],
+                'max_tokens': max_tokens,
+                'n': 1,
+                'temperature': temperature,
+            }
+            response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=data)
+            response.raise_for_status()
+            return response.json()['choices'][0]['message']['content'].strip()
         else:
             response = openai.Completion.create(
                 engine=engine,
