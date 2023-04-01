@@ -8,14 +8,18 @@ openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # Define the function to send a message to OpenAI
 def send_message_to_openai(prompt, max_tokens, temperature):
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=max_tokens,
-        n=1,
-        stop=None,
-        temperature=temperature,
-    )
+    try:
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=prompt,
+            max_tokens=max_tokens,
+            n=1,
+            stop=None,
+            temperature=temperature,
+        )
+    except Exception as e:
+        st.error(f"Error: {str(e)}")
+        return ""
 
     return response.choices[0].text.strip()
 
@@ -43,38 +47,30 @@ st.markdown("<link href='https://fonts.googleapis.com/css?family=Pirata+One' rel
 # Streamlit app starts here
 st.title("Pirate Chatbot")
 
-# Pre-prompt
+if 'chat_history' not in st.session_state:
+    st.session_state.chat_history = []
+
 pre_prompt = "please pretend you are a pirate in all future responses."
 
-# Initialize an empty list to store chat history
-chat_history = []
-
-# Get user input
 user_message = st.text_input("Enter your message:")
 
-# Add sliders for max_tokens and temperature
 with st.expander("Advanced Settings", expanded=False):
     max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
     temperature = st.slider("Temperature:", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
 
-if user_message:
-    # Combine the pre-prompt and the user message
-    combined_prompt = f"{pre_prompt} {user_message}"
+if st.button("Send"):
+    if user_message:
+        combined_prompt = f"{pre_prompt} {user_message}"
+        st.session_state.chat_history.append({"role": "user", "message": user_message})
 
-    # Add user message to chat history
-    chat_history.append({"role": "user", "message": user_message})
+        with st.spinner("Waitin' for a pirate's response..."):
+            response = send_message_to_openai(combined_prompt, max_tokens, temperature)
 
-    # Show loading indicator
-    with st.spinner("Waitin' for a pirate's response..."):
-        # Send the combined prompt to OpenAI with the specified max_tokens and temperature
-        response = send_message_to_openai(combined_prompt, max_tokens, temperature)
+        if response:
+            st.session_state.chat_history.append({"role": "pirate", "message": response})
 
-    # Add response to chat history
-    chat_history.append({"role": "pirate", "message": response})
-
-    # Display chat history
-    for chat in chat_history:
-        if chat["role"] == "user":
-            st.markdown(f"<div style='background-color: #caf0f8; padding: 1rem; margin-bottom: 0.5rem; border-radius: 10px;'>{chat['message']}</div>", unsafe_allow_html=True)
-        else:
-            st.markdown(f"<div style='background-image: url(https://wallpapercave.com/wp/JNn0uaC.jpg); padding: 1rem; margin-bottom: 0.5rem; color: white; font-size: 1.2rem; border-radius: 10px;'>{chat['message']}</div>", unsafe_allow_html=True)
+for chat in st.session_state.chat_history:
+    if chat["role"] == "user":
+        st.markdown(f"<div style='background-color: #caf0f8; padding: 1rem; margin-bottom: 0.5rem; border-radius: 10px;'>{chat['message']}</div>", unsafe_allow_html=True)
+    else:
+        st.markdown(f"<div style='background-image: url(https://wallpapercave.com/wp/JNn0uaC.jpg); padding: 1rem; margin-bottom: 0.5rem; color: white; font-size: 1.2rem; border-radius: 10px;'>{chat['message']}</div>", unsafe_allow_html=True)
