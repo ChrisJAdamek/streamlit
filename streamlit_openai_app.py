@@ -33,6 +33,8 @@ def send_message_to_openai(prompt, max_tokens, temperature, engine):
         st.error(f"Error: {str(e)}")
         return ""
 
+    return response.choices[0].text.strip()
+
 # Custom CSS for the app
 custom_css = """
 <style>
