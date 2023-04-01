@@ -7,21 +7,31 @@ import openai
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # Define the function to send a message to OpenAI
+
 def send_message_to_openai(prompt, max_tokens, temperature, engine):
     try:
-        response = openai.Completion.create(
-            engine=engine,
-            prompt=prompt,
-            max_tokens=max_tokens,
-            n=1,
-            stop=None,
-            temperature=temperature,
-        )
+        if engine == "gpt-3.5-turbo":
+            response = openai.ChatCompletion.create(
+                engine=engine,
+                messages=[{"role": "system", "content": pre_prompt}, {"role": "user", "content": user_message}],
+                max_tokens=max_tokens,
+                n=1,
+                temperature=temperature,
+            )
+            return response.choices[0].message['content'].strip()
+        else:
+            response = openai.Completion.create(
+                engine=engine,
+                prompt=prompt,
+                max_tokens=max_tokens,
+                n=1,
+                stop=None,
+                temperature=temperature,
+            )
+            return response.choices[0].text.strip()
     except Exception as e:
         st.error(f"Error: {str(e)}")
         return ""
-
-    return response.choices[0].text.strip()
 
 # Custom CSS for the app
 custom_css = """
