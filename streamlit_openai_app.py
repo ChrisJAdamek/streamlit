@@ -20,7 +20,7 @@ Print: "This [premise/assumption] is sound because [insert a list of two or more
 Print: "This [premise/assumption] may be unsound because [insert a list of two or more true statement that each disprove or undermine the truth of the premise/assumption]".
 Print: "This [premise/assumption] can be tested by [insert list of two or more empirical methods for testing the truth of the premise/assumption]".'''
 
-@st.cache_data(suppress_st_warning=True, show_spinner=False)
+@st.cache_data(show_spinner=False)
 def send_message_to_openai(prompt, user_message, max_tokens, temperature, engine):
     headers = {
         'Content-Type': 'application/json',
