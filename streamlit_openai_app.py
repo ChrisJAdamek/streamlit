@@ -1,16 +1,12 @@
-class SessionState:
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
-
 import os
 import requests
 import streamlit as st
 import openai
-
-
+from session_state import SessionState
+from custom_css import custom_css
 
 # Set up OpenAI API
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
 def send_message_to_openai(prompt, max_tokens, temperature, engine):
     headers = {
@@ -18,78 +14,22 @@ def send_message_to_openai(prompt, max_tokens, temperature, engine):
         'Authorization': f'Bearer {openai.api_key}'
     }
 
-    try:
-        if engine == "gpt-3.5-turbo":
-            data = {
-                'model': engine,
-                'messages': [{"role": "system", "content": pre_prompt}, {"role": "user", "content": user_message}],
-                'max_tokens': max_tokens,
-                'n': 1,
-                'temperature': temperature,
-            }
-            response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=data)
-            response.raise_for_status()
-            return response.json()['choices'][0]['message']['content'].strip()
-        else:
-            response = openai.Completion.create(
-                engine=engine,
-                prompt=prompt,
-                max_tokens=max_tokens,
-                n=1,
-                stop=None,
-                temperature=temperature,
-            )
-            return response.choices[0].text.strip()
-    except Exception as e:
-        st.error(f"Error: {str(e)}")
-        if hasattr(e, 'response') and e.response is not None:
-            st.error(f"Error details: {e.response.text}")
-        return ""
+    data = {
+        'model': engine,
+        'prompt': prompt,
+        'max_tokens': max_tokens,
+        'n': 1,
+        'temperature': temperature,
+    }
 
-    return response.choices[0].text.strip()
+    response = requests.post('https://api.openai.com/v1/engines/davinci-codex/completions', headers=headers, json=data)
+    response.raise_for_status()
 
-custom_css = """
-<style>
-    body {
-        background-color: #f7f7f7;
-    }
-    .stApp {
-        padding: 2rem;
-    }
-    h1 {
-        font-family: 'Pirata One', cursive;
-        font-size: 3rem;
-    }
-    .accessible-text {
-        color: #4a4a4a;
-    }
-    .user-bubble {
-        background-color: #34C759;
-        padding: 1rem;
-        margin-bottom: 0.5rem;
-        border-radius: 1rem;
-        max-width: 75%;
-        color: white;
-    }
-    .pirate-bubble {
-        background-color: #0A84FF;
-        padding: 1rem;
-        margin-bottom: 0.5rem;
-        border-radius: 1rem;
-        max-width: 75%;
-        color: white;
-    }
-    textarea {
-        resize: vertical;
-    }
-</style>
-"""
+    return response.json()['choices'][0]['text'].strip()
 
 st.markdown(custom_css, unsafe_allow_html=True)
 
-st.markdown("<link href='https://fonts.googleapis.com/css?family=Pirata+One' rel='stylesheet'>", unsafe_allow_html=True)
-
-st.markdown("<h1 tabindex='0'>Pirate Chatbot</h1>", unsafe_allow_html=True)
+st.title("Pirate Chatbot")
 
 session_state = SessionState(chat_history=[])
 
@@ -111,14 +51,19 @@ user_message = st.text_area("Enter your message:", key="user_input")
 with st.expander("Advanced Settings", expanded=False):
     max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
     temperature = st.slider("Temperature:", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
-    engine = st.selectbox("Select a language model:", ("gpt-4-32k", "gpt-3.5-turbo", "text-davinci-003", "code-davinci-002"))
+    engine = st.selectbox("Select a language model:", ("davinci-codex", "text-davinci-002", "text-curie-003", "text-babbage-001"))
 
 if st.button("Send"):
     if user_message:
         combined_prompt = f"{pre_prompt} {user_message}"
         session_state.chat_history.append({"role": "user", "message": user_message})
         with st.spinner("Waitin' for a pirate's response..."):
-            response = send_message_to_openai(combined_prompt, max_tokens, temperature, engine)
+            try:
+                response = send_message_to_openai(combined_prompt, max_tokens, temperature, engine)
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+                response = ""
+
         if response:
             session_state.chat_history.append({"role": "pirate", "message": response})
 
@@ -126,7 +71,7 @@ chat_container = st.container()
 for chat in session_state.chat_history:
     with chat_container:
         if chat["role"] == "user":
-            st.write(chat['message'], class_='user-bubble')
+            st.markdown(f'<div class="user-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
         else:
-            st.write(chat['message'], class_='pirate-bubble')
+            st.markdown(f'<div class="pirate-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
 
