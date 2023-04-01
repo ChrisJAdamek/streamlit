@@ -36,56 +36,6 @@ custom_css = """
         font-family: 'Pirata One', cursive;
         font-size: 3rem;
     }
-    .user-message {
-        background-color: #caf0f8;
-        padding: 0.5rem 1rem;
-        margin-bottom: 0.5rem;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-    }
-    .pirate-message {
-        background-color: #d35400;
-        color: white;
-        padding: 0.5rem 1rem;
-        margin-bottom: 0.5rem;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-    }
-    .message-icon {
-        width: 24px;
-        height: 24px;
-        margin-right: 1rem;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-    .message-text {
-        flex: 1;
-    }
-    .message-timestamp {
-        font-size: 0.8rem;
-        color: #666;
-        margin-left: 1rem;
-    }
-    .message-bubble {
-        max-width: 80%;
-        margin-left: auto;
-    }
-    .user-message .message-icon {
-        background-image: url(https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/bear_russian_animal_avatar-256.png);
-    }
-    .pirate-message .message-icon {
-        background-image: url(https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/pirate_animal_avatar_pirate_bear-256.png);
-    }
-    .pirate-message .message-bubble {
-        background-color: #fcf3cf;
-    }
-    .message-container {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 1rem;
-    }
 </style>
 """
 
@@ -106,7 +56,7 @@ user_message = st.text_input("Enter your message:")
 
 with st.expander("Advanced Settings", expanded=False):
     max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
-    temperature = st.slider("Temperature:", min_value=0.1, max_value=1.0, value=0.7, step=0)
+    temperature = st.slider("Temperature:", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
 
 if st.button("Send"):
     if user_message:
@@ -120,26 +70,7 @@ if st.button("Send"):
             st.session_state.chat_history.append({"role": "pirate", "message": response})
 
 for chat in st.session_state.chat_history:
-    message_icon_url = ""
     if chat["role"] == "user":
-        message_icon_url = "https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/bear_russian_animal_avatar-256.png"
+        st.markdown(f"<div style='background-color: #caf0f8; padding: 1rem; margin-bottom: 0.5rem; border-radius: 10px;'>{chat['message']}</div>", unsafe_allow_html=True)
     else:
-        message_icon_url = "https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/pirate_animal_avatar_pirate_bear-256.png"
-        
-    st.markdown(f"""
-        <div class="message-container {chat['role']}-message">
-            <img class="message-icon" src="{message_icon_url}" alt="{chat['role']} icon">
-            <div class="message-bubble">
-                <div class="message-text">{chat['message']}</div>
-                <div class="message-timestamp">{st.session_state['timestamp']}</div>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
-    st.session_state['timestamp'] = "" # reset timestamp for the next message
-
-    # Add timestamp to the latest message
-    if chat == st.session_state.chat_history[-1]:
-        st.session_state['timestamp'] = st.experimental_get_single_slot_value() or st.session_state['timestamp']
-        st.session_state['timestamp'] = st.slider("Set timestamp (in seconds)", min_value=0, max_value=60, value=0, step=1) * 1000
-        st.experimental_set_single_slot(key="timestamp", value=st.session_state['timestamp'])
-
+        st.markdown(f"<div style='background-image: url(https://wallpapercave.com/wp/JNn0uaC.jpg); padding: 1rem; margin-bottom: 0.5rem; color: white; font-size: 1.2rem; border-radius: 10px;'>{chat['message']}</div>", unsafe_allow_html=True)
