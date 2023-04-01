@@ -1,8 +1,14 @@
+class SessionState:
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
 import os
 import requests
 import streamlit as st
 from streamlit import SessionState
 import openai
+
+
 
 # Set up OpenAI API
 openai.api_key = st.secrets["OPENAI_API_KEY"]
