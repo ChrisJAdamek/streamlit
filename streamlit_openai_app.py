@@ -52,7 +52,9 @@ def update_session_state_user_input():
     st.session_state.user_input = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
 
 def main():
-    user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input", on_change=update_session_state_user_input)
+    with st.form(key='message_form'):
+    user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
+    submit_button = st.form_submit_button("Send")
     st.markdown("""<style>
         .chat-container {
             max-height: 500px;
@@ -96,7 +98,7 @@ if __name__ == "__main__":
     # Get the user_message from the main function
     user_message = main()
 
-if st.button("Send"):
+if submit_button:
     if user_message:
         st.session_state.chat_history.append({"role": "user", "message": user_message})
         combined_prompt = f"{get_pre_prompt()} {user_message}"
