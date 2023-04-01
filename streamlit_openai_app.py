@@ -47,8 +47,12 @@ def send_message_to_openai(prompt, user_message, max_tokens, temperature, engine
 
 st.set_page_config(page_title="Thesis Review", layout="wide")
 
+
+def update_session_state_user_input():
+    st.session_state.user_input = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
+
 def main():
-    user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
+    user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input", on_change=update_session_state_user_input)
     st.markdown("""<style>
         .chat-container {
             max-height: 500px;
