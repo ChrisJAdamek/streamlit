@@ -45,6 +45,10 @@ def send_message_to_openai(prompt, user_message, max_tokens, temperature, engine
             st.error(f"Error details: {e.response.text}")
         return ""
 
+st.set_page_config(page_title="Thesis Review", layout="wide")
+
+def main():
+
 def main():
     st.set_page_config(page_title="Thesis Review", layout="wide")
     
