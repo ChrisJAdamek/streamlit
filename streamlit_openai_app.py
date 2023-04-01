@@ -7,10 +7,10 @@ import openai
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # Define the function to send a message to OpenAI
-def send_message_to_openai(prompt, max_tokens, temperature):
+def send_message_to_openai(prompt, max_tokens, temperature, engine):
     try:
         response = openai.Completion.create(
-            engine="text-davinci-003",
+            engine=engine,
             prompt=prompt,
             max_tokens=max_tokens,
             n=1,
@@ -60,6 +60,7 @@ user_message = st.text_input("Enter your message:", key="user_input")
 with st.expander("Advanced Settings", expanded=False):
     max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
     temperature = st.slider("Temperature:", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
+    engine = st.selectbox("Select a language model:", ("gpt-4-32k", "gpt-3.5-turbo", "text-davinci-003", "code-davinci-002"))
 
 if st.button("Send"):
     if user_message:
@@ -67,7 +68,7 @@ if st.button("Send"):
         st.session_state.chat_history.append({"role": "user", "message": user_message})
 
         with st.spinner("Waitin' for a pirate's response..."):
-            response = send_message_to_openai(combined_prompt, max_tokens, temperature)
+            response = send_message_to_openai(combined_prompt, max_tokens, temperature, engine)
 
         if response:
             st.session_state.chat_history.append({"role": "pirate", "message": response})
