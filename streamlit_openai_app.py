@@ -38,7 +38,10 @@ def send_message_to_openai(prompt, max_tokens, temperature, engine):
             return response.choices[0].text.strip()
     except Exception as e:
         st.error(f"Error: {str(e)}")
+        if hasattr(e, 'response') and e.response is not None:
+            st.error(f"Error details: {e.response.text}")
         return ""
+
 
     return response.choices[0].text.strip()
 
