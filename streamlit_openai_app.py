@@ -91,7 +91,7 @@ st.markdown("<link href='https://fonts.googleapis.com/css?family=Pirata+One' rel
 
 st.markdown("<h1 tabindex='0'>Pirate Chatbot</h1>", unsafe_allow_html=True)
 
-session_state = SessionState.get(chat_history=[])
+session_state = SessionState(chat_history=[])
 
 pre_prompt = '''You are a scholar of logical reasoning. You specialize in propositional logic. Your job is to critically analyze the thesis statement submitted by students and provide advice on the logical validity and soundness of the thesis. Let's take this step by step as follows:
 
