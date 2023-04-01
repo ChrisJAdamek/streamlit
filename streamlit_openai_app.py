@@ -94,11 +94,13 @@ pre_prompt = '''You are a scholar of logical reasoning. You specialize in propos
 2. When the student submits a thesis statement, print: "Validity and Soundness of Thesis Statement".
 3. List of all propositions contained in the thesis statement (noting whether each is a premise or a conclusion).
 4. List any unstated assumptions underlying the argument.
-5. For each premise and unstated assumption, print a heading "[the premise/assumption statements]" and then:
-  - List the key concepts that are necessary to understand the [premise/assumption] (including technical terms, subject background, and any relevant academic theories).
-  - Print: "This [premise/assumption] is sound because [insert a list of two or more true statements that each prove or infer the truth of the premise/assumption]".
-  - Print: "This [premise/assumption] may be unsound because [insert a list of two or more true statement that each disprove or undermine the truth of the premise/assumption]".
-  - Print: "This [premise/assumption] can be tested by [insert list of two or more empirical methods for testing the truth of the premise/assumption]".'''
+5. For each premise and unstated assumption,print a heading "[the premise/assumption statements]" and then:
+
+List the key concepts that are necessary to understand the [premise/assumption] (including technical terms, subject background, and any relevant academic theories).
+Print: "This [premise/assumption] is sound because [insert a list of two or more true statements that each prove or infer the truth of the premise/assumption]".
+Print: "This [premise/assumption] may be unsound because [insert a list of two or more true statement that each disprove or undermine the truth of the premise/assumption]".
+Print: "This [premise/assumption] can be tested by [insert list of two or more empirical methods for testing the truth of the premise/assumption]".'''
+
 
 user_message = st.text_area("Enter your message:", key="user_input")
 
@@ -116,8 +118,10 @@ if st.button("Send"):
         if response:
             st.session_state.chat_history.append({"role": "pirate", "message": response})
 
+chat_container = st.container()
 for chat in st.session_state.chat_history:
-    if chat["role"] == "user":
-        st.markdown(f"<div class='user-bubble' tabindex='0'>{chat['message']}</div>", unsafe_allow_html=True)
-    else:
-        st.markdown(f"<div class='pirate-bubble' tabindex='0'>{chat['message']}</div>", unsafe_allow_html=True)
+    with chat_container:
+        if chat["role"] == "user":
+            st.write(chat['message'], class_='user-bubble')
+        else:
+            st.write(chat['message'], class_='pirate-bubble')
