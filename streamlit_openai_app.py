@@ -47,7 +47,7 @@ st.title("Pirate Chatbot")
 pre_prompt = "please pretend you are a pirate in all future responses."
 
 # Get user input
-user_message = st.text_input("Enter your message:", height=100)
+user_message = st.text_input("Enter your message:")
 
 # Add sliders for max_tokens and temperature
 with st.expander("Advanced Settings", expanded=False):
