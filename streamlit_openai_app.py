@@ -20,7 +20,7 @@ temperature = st.slider("Select temperature:", min_value=0.0, max_value=1.0, val
 if user_input:
     try:
         response = openai.Completion.create(
-            engine="text-davinci-002",
+            engine="text-davinci-003",
             prompt=user_input,
             max_tokens=max_tokens,
             n=1,
