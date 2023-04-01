@@ -21,7 +21,7 @@ Print: "This [premise/assumption] may be unsound because [insert a list of two o
 Print: "This [premise/assumption] can be tested by [insert list of two or more empirical methods for testing the truth of the premise/assumption]".'''
 
 @st.cache(suppress_st_warning=True, show_spinner=False)
-def send_message_to_openai(prompt, max_tokens, temperature, engine):
+def send_message_to_openai(prompt, user_message, max_tokens, temperature, engine):
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {openai.api_key}'
@@ -67,7 +67,7 @@ def main():
             st.session_state.chat_history.append({"role": "user", "message": user_message})
             with st.spinner("Waitin' for a pirate's response..."):
                 try:
-                    response = send_message_to_openai(combined_prompt, max_tokens, temperature, engine)
+                    response = send_message_to_openai(combined_prompt, user_message, max_tokens, temperature, engine)
                 except Exception as e:
                     st.error(f"Error: {str(e)}")
                     response = ""
