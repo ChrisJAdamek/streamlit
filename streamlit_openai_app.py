@@ -101,7 +101,7 @@ if st.button("Send"):
 
         # Clear the user message input
         st.session_state.user_input = ""
-        st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
+        st.session_state.user_input = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
 
 if __name__ == "__main__":
     if "chat_history" not in st.session_state:
