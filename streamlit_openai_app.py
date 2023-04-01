@@ -73,6 +73,9 @@ custom_css = """
         max-width: 75%;
         color: white;
     }
+    textarea {
+        resize: vertical;
+    }
 </style>
 """
 
@@ -87,7 +90,7 @@ if 'chat_history' not in st.session_state:
 
 pre_prompt = "please pretend you are a pirate in all future responses."
 
-user_message = st.text_input("Enter your message:", key="user_input")
+user_message = st.text_area("Enter your message:", key="user_input")
 
 with st.expander("Advanced Settings", expanded=False):
     max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
@@ -100,7 +103,6 @@ if st.button("Send"):
         st.session_state.chat_history.append({"role": "user", "message": user_message})
         with st.spinner("Waitin' for a pirate's response..."):
             response = send_message_to_openai(combined_prompt, max_tokens, temperature, engine)
-
         if response:
             st.session_state.chat_history.append({"role": "pirate", "message": response})
 
@@ -109,5 +111,4 @@ for chat in st.session_state.chat_history:
         st.markdown(f"<div class='user-bubble' tabindex='0'>{chat['message']}</div>", unsafe_allow_html=True)
     else:
         st.markdown(f"<div class='pirate-bubble' tabindex='0'>{chat['message']}</div>", unsafe_allow_html=True)
-
 
