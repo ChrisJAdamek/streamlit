@@ -76,10 +76,11 @@ if st.button("Send"):
             session_state.chat_history.append({"role": "pirate", "message": response})
 
 chat_container = st.container()
-for chat in session_state.chat_history:
-    with chat_container:
+with chat_container:
+    st.write('<div class="chat-container">', unsafe_allow_html=True)
+    for chat in session_state.chat_history:
         if chat["role"] == "user":
-            st.markdown(f'<div class="user-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
+            st.write(f'<div class="message">{chat["message"]}</div>', unsafe_allow_html=True)
         else:
-            st.markdown(f'<div class="pirate-bubble">{chat["message"]}</div>', unsafe_allow_html=True)
-
+            st.write(f'<div class="message">{chat["message"]}</div>', unsafe_allow_html=True)
+    st.write('</div>', unsafe_allow_html=True)
