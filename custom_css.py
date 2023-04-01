@@ -1,3 +1,5 @@
+import streamlit as st
+
 custom_css = """
 <style>
     body {
