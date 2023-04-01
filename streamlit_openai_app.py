@@ -7,7 +7,6 @@ import openai
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # Define the function to send a message to OpenAI
-
 def send_message_to_openai(prompt, max_tokens, temperature, engine):
     try:
         if engine == "gpt-3.5-turbo":
@@ -88,5 +87,5 @@ if st.button("Send"):
 for chat in st.session_state.chat_history:
     if chat["role"] == "user":
         st.markdown(f"<div style='background-color: #caf0f8; padding: 1rem; margin-bottom: 0.5rem; border-radius: 10px;' tabindex='0'>{chat['message']}</div>", unsafe_allow_html=True)
-    else:
-        st.markdown(f"<div style='background-image: url(https://wallpapercave.com/wp/JNn0uaC.jpg); padding: 1rem; margin-bottom: 0.5rem; color: white; font-size: 1.2rem; border-radius: 10px;' tabindex='0' role='img' aria-label='Pirate response'><div class='accessible-text'>{chat['message']}</div></div>", unsafe_allow_html=True)
+else:
+st.markdown(f"<div style='background-image: url(https://wallpapercave.com/wp/JNn0uaC.jpg); padding: 1rem; margin-bottom: 0.5rem; color: white; font-size: 1.2rem; border-radius: 10px;' tabindex='0' role='img' aria-label='Pirate response'><div class='accessible-text'>{chat['message']}</div></div>", unsafe_allow_html=True)
