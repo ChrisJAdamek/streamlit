@@ -48,7 +48,6 @@ def send_message_to_openai(prompt, user_message, max_tokens, temperature, engine
 st.set_page_config(page_title="Thesis Review", layout="wide")
 
 def main():
-    st.set_page_config(page_title="Thesis Review", layout="wide")
 
     user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
     st.markdown("""<style>
