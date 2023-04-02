@@ -74,15 +74,6 @@ def main():
             margin-bottom: 5px;
         }
     </style>""", unsafe_allow_html=True)
-    with st.form(key='message_form'):
-        user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
-        submit_button = st.form_submit_button("Send")
-        st.markdown("""<style>
-            .chat-container {
-                max-height: 500px;
-                overflow-y: auto;
-            }
-        </style>""", unsafe_allow_html=True)
 
     cols = st.columns(2)
     chat_container = cols[0].container()
