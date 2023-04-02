@@ -53,19 +53,20 @@ def update_session_state_user_input():
 
 def main():
     with st.form(key='message_form'):
-    user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
-    submit_button = st.form_submit_button("Send", key="submit_button")
-
-    st.markdown("""<style>
-        .chat-container {
-            max-height: 500px;
-            overflow-y: auto;
-        }
-    </style>""", unsafe_allow_html=True)
+        user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
+        submit_button = st.form_submit_button("Send")
+        st.markdown("""<style>
+            .chat-container {
+                max-height: 500px;
+                overflow-y: auto;
+            }
+        </style>""", unsafe_allow_html=True)
 
     cols = st.columns(2)
     chat_container = cols[0].container()
     with chat_container:
+        # Rest of the code
+
         st.write('<div class="chat-container">', unsafe_allow_html=True)
         for chat in st.session_state.chat_history:
             if chat["role"] == "user":
