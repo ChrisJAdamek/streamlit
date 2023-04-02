@@ -65,9 +65,6 @@ def send_message_to_openai(prompt, user_message, max_tokens, temperature, engine
             st.error(f"Error details: {e.response.text}")
         return ""
 
-st.set_page_config(page_title="Thesis Review", layout="wide")
-
-
 def update_session_state_user_input():
     st.session_state.user_input = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
 
@@ -100,6 +97,7 @@ def main():
     return user_message, submit_button, max_tokens, temperature, engine
 
 if __name__ == "__main__":
+    st.set_page_config(page_title="Thesis Review", layout="wide")  # Move the set_page_config() call her
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
     if "user_input" not in st.session_state:
