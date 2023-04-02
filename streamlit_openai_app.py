@@ -6,7 +6,7 @@ import openai
 # Set up OpenAI API
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-@st.cache_data(show_spinner=False)
+@st.cache(show_spinner=False)
 def get_available_models():
     headers = {
         'Content-Type': 'application/json',
@@ -71,32 +71,20 @@ st.set_page_config(page_title="Thesis Review", layout="wide")
 def update_session_state_user_input():
     st.session_state.user_input = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
 
+
+st.set_page_config(page_title="Thesis Review", layout="wide")
+
 def main():
     with st.form(key='message_form'):
         user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
         submit_button = st.form_submit_button("Send")
-        
-    st.markdown("""<style>
-        .chat-container {
-            max-height: 500px;
-            overflow-y: auto;
-        }
-        .message.user {
-            background-color: #f0f0f0;
-            border-radius: 5px;
-            padding: 5px;
-            margin-bottom: 5px;
-        }
-        .message.pirate {
-            background-color: #d0d0d0;
-            border-radius: 5px;
-            padding: 5px;
-            margin-bottom: 5px;
-        }
-    </style>""", unsafe_allow_html=True)
 
     cols = st.columns(2)
     chat_container = cols[0].container()
+
+    # Fix: Define control_container before using it
+    control_container = cols[1].container()
+
     with control_container:
         with st.expander("Advanced Settings", expanded=False):
             max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
