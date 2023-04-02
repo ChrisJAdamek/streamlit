@@ -87,7 +87,7 @@ def main():
                 ),
             )
 
-    return user_message, submit_button
+    return user_message, submit_button, max_tokens, temperature, engine
 
 if __name__ == "__main__":
     if "chat_history" not in st.session_state:
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     if "user_input" not in st.session_state:
         st.session_state.user_input = ""
 
-    user_message, submit_button = main()
+    user_message, submit_button, max_tokens, temperature, engine = main()
 
 if submit_button:
     if user_message:
