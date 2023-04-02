@@ -54,7 +54,8 @@ def update_session_state_user_input():
 def main():
     with st.form(key='message_form'):
     user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
-    submit_button = st.form_submit_button("Send")
+    submit_button = st.form_submit_button("Send", key="submit_button")
+
     st.markdown("""<style>
         .chat-container {
             max-height: 500px;
