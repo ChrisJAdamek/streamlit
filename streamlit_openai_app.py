@@ -3,12 +3,6 @@ import requests
 import streamlit as st
 import openai
 
-st.markdown(
-    '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">', 
-    unsafe_allow_html=True
-)
-
-
 # Set up OpenAI API
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
@@ -64,8 +58,7 @@ def main():
     with st.form(key='message_form'):
         user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
         submit_button = st.form_submit_button("Send")
-        gear_button = st.markdown('<button id="gear" class="btn" style="background-color: Transparent; background-repeat:no-repeat; border: none; cursor:pointer; overflow: hidden; outline:none;"><i class="fas fa-cog"></i></button>', unsafe_allow_html=True)
-
+        
     st.markdown("""<style>
         .chat-container {
             max-height: 500px;
@@ -110,7 +103,7 @@ def main():
                 ),
             )
 
-    return user_message, submit_button, gear_button, max_tokens, temperature, engine
+    return user_message, submit_button, max_tokens, temperature, engine
 
 if __name__ == "__main__":
     if "chat_history" not in st.session_state:
@@ -118,21 +111,7 @@ if __name__ == "__main__":
     if "user_input" not in st.session_state:
         st.session_state.user_input = ""
 
-    user_message, submit_button, gear_button, max_tokens, temperature, engine = main()
-
-    # Show the advanced settings modal when the gear icon is clicked
-    if gear_button:
-        with st.sidebar.modal("Advanced Settings"):
-            max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
-            temperature = st.slider("Temperature:", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
-            engine = st.selectbox(
-                "Select a language model:",
-                (
-                    "gpt-3.5-turbo",
-                    "gpt-4",
-                    "gpt-4-32k",
-                ),
-            )
+    user_message, submit_button, max_tokens, temperature, engine = main()
 
 if submit_button:
     if user_message:
