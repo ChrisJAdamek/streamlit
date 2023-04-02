@@ -66,12 +66,12 @@ def main():
     chat_container = cols[0].container()
     with chat_container:
         st.write('<div class="chat-container">', unsafe_allow_html=True)
-        for chat in st.session_state.chat_history:
+        for chat in reversed(st.session_state.chat_history):
             if chat["role"] == "user":
                 st.write(f'<div class="message"><span>{chat["message"]}</span></div>', unsafe_allow_html=True)
             else:
                 st.write(f'<div class="message"><span>{chat["message"]}</span></div>', unsafe_allow_html=True)
-        st.write('</div>', unsafe_allow_html=True)
+                st.write('</div>', unsafe_allow_html=True)
 
     control_container = cols[1].container()
     with control_container:
