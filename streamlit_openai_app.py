@@ -91,3 +91,7 @@ def main():
     # Return user_message and submit_button at the end of the main function
     return user_message, submit_button
 
+
+if __name__ == "__main__":
+    main()
+
