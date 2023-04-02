@@ -2,7 +2,12 @@ import os
 import requests
 import streamlit as st
 import openai
-from streamlit_fontawesome import st_fontawesome
+
+st.markdown(
+    '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">', 
+    unsafe_allow_html=True
+)
+
 
 # Set up OpenAI API
 openai.api_key = st.secrets["OPENAI_API_KEY"]
@@ -59,7 +64,7 @@ def main():
     with st.form(key='message_form'):
         user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
         submit_button = st.form_submit_button("Send")
-        gear_button = st_fontawesome(font_awesome_icon="cog", height="24px")
+        gear_button = st.markdown('<button id="gear" class="btn" style="background-color: Transparent; background-repeat:no-repeat; border: none; cursor:pointer; overflow: hidden; outline:none;"><i class="fas fa-cog"></i></button>', unsafe_allow_html=True)
 
     st.markdown("""<style>
         .chat-container {
