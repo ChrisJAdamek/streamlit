@@ -23,6 +23,7 @@ def get_available_models():
             st.error(f"Error details: {e.response.text}")
         return []
 
+
 def get_pre_prompt():
     return '''You are a scholar of logical reasoning. You specialize in propositional logic. Your job is to critically analyze the thesis statement submitted by students and provide advice on the logical validity and soundness of the thesis. Let's take this step by step as follows:
 
@@ -40,7 +41,7 @@ Thesis for review:
 
 '''
 
-@st.cache_data(show_spinner=False)
+@st.cache(show_spinner=False)
 def send_message_to_openai(prompt, user_message, max_tokens, temperature, engine):
     headers = {
         'Content-Type': 'application/json',
