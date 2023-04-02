@@ -65,8 +65,6 @@ def main():
     cols = st.columns(2)
     chat_container = cols[0].container()
     with chat_container:
-        # Rest of the code
-
         st.write('<div class="chat-container">', unsafe_allow_html=True)
         for chat in st.session_state.chat_history:
             if chat["role"] == "user":
@@ -88,20 +86,16 @@ def main():
                     "gpt-4-32k",
                 ),
             )
-    # Return user_message and submit_button at the end of the main function
+
     return user_message, submit_button
-
-
 
 if __name__ == "__main__":
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
     if "user_input" not in st.session_state:
         st.session_state.user_input = ""
-    
-    # Get the user_message and submit_button from the main function
-    user_message, submit_button = main()
 
+    user_message, submit_button = main()
 
 if submit_button:
     if user_message:
@@ -117,6 +111,6 @@ if submit_button:
         if response:
             st.session_state.chat_history.append({"role": "pirate", "message": response})
 
-        # Clear the user message input
-        st.session_state.user_input = ""
-        st.experimental_rerun()
+            # Clear the user message input by directly setting the value of the text area widget to an empty string
+            user_message = ""
+            st.experimental_rerun()
