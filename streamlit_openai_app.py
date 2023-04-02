@@ -6,7 +6,7 @@ import openai
 # Set up OpenAI API
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-@st.cache(show_spinner=False)
+@st.cache_data(show_spinner=False)  # Fix: Replace st.cache with st.cache_data
 def get_available_models():
     headers = {
         'Content-Type': 'application/json',
@@ -22,7 +22,6 @@ def get_available_models():
         if hasattr(e, 'response') and e.response is not None:
             st.error(f"Error details: {e.response.text}")
         return []
-
 
 def get_pre_prompt():
     return '''You are a scholar of logical reasoning. You specialize in propositional logic. Your job is to critically analyze the thesis statement submitted by students and provide advice on the logical validity and soundness of the thesis. Let's take this step by step as follows:
@@ -41,7 +40,7 @@ Thesis for review:
 
 '''
 
-@st.cache(show_spinner=False)
+@st.cache_data(show_spinner=False)  # Fix: Replace st.cache with st.cache_data
 def send_message_to_openai(prompt, user_message, max_tokens, temperature, engine):
     headers = {
         'Content-Type': 'application/json',
