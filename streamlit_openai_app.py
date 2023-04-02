@@ -99,8 +99,9 @@ if __name__ == "__main__":
     if "user_input" not in st.session_state:
         st.session_state.user_input = ""
     
-    # Get the user_message from the main function
-    user_message = main()
+    # Get the user_message and submit_button from the main function
+    user_message, submit_button = main()
+
 
 if submit_button:
     if user_message:
