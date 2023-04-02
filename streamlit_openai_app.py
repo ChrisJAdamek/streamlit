@@ -6,6 +6,23 @@ import openai
 # Set up OpenAI API
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
+@st.cache_data(show_spinner=False)
+def get_available_models():
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {openai.api_key}'
+    }
+
+    try:
+        response = requests.get('https://api.openai.com/v1/models', headers=headers)
+        response.raise_for_status()
+        return [model['id'] for model in response.json()['data']]
+    except Exception as e:
+        st.error(f"Error: {str(e)}")
+        if hasattr(e, 'response') and e.response is not None:
+            st.error(f"Error details: {e.response.text}")
+        return []
+
 def get_pre_prompt():
     return '''You are a scholar of logical reasoning. You specialize in propositional logic. Your job is to critically analyze the thesis statement submitted by students and provide advice on the logical validity and soundness of the thesis. Let's take this step by step as follows:
 
@@ -80,28 +97,17 @@ def main():
 
     cols = st.columns(2)
     chat_container = cols[0].container()
-    with chat_container:
-        st.write('<div class="chat-container">', unsafe_allow_html=True)
-        for chat in reversed(st.session_state.chat_history):
-            if chat["role"] == "user":
-                st.write(f'<div class="message user"><span>{chat["message"]}</span></div>', unsafe_allow_html=True)
-            else:
-                st.write(f'<div class="message pirate"><span>{chat["message"]}</span></div>', unsafe_allow_html=True)
-        st.write('</div>', unsafe_allow_html=True)
-
-    control_container = cols[1].container()
     with control_container:
         with st.expander("Advanced Settings", expanded=False):
             max_tokens = st.slider("Max tokens:", min_value=10, max_value=1000, value=100, step=10)
             temperature = st.slider("Temperature:", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
-            engine = st.selectbox(
-                "Select a language model:",
-                (
-                    "gpt-3.5-turbo",
-                    "gpt-4",
-                    "gpt-4-32k",
-                ),
-            )
+            
+            available_models = get_available_models()
+            if available_models:
+                engine = st.selectbox("Select a language model:", available_models)
+            else:
+                st.error("Unable to fetch available models.")
+                engine = "gpt-3.5-turbo"
 
     return user_message, submit_button, max_tokens, temperature, engine
 
