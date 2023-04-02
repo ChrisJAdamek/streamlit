@@ -1,4 +1,4 @@
 streamlit
 openai
 requests
-streamlit-fontawesome==0.1.2
+streaml
