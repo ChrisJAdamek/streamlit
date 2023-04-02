@@ -55,6 +55,28 @@ def main():
     with st.form(key='message_form'):
         user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
         submit_button = st.form_submit_button("Send")
+        
+    st.markdown("""<style>
+        .chat-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .message.user {
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            padding: 5px;
+            margin-bottom: 5px;
+        }
+        .message.pirate {
+            background-color: #d0d0d0;
+            border-radius: 5px;
+            padding: 5px;
+            margin-bottom: 5px;
+        }
+    </style>""", unsafe_allow_html=True)
+    with st.form(key='message_form'):
+        user_message = st.text_area("Enter your message:", value=st.session_state.user_input, key="user_input")
+        submit_button = st.form_submit_button("Send")
         st.markdown("""<style>
             .chat-container {
                 max-height: 500px;
@@ -68,10 +90,10 @@ def main():
         st.write('<div class="chat-container">', unsafe_allow_html=True)
         for chat in reversed(st.session_state.chat_history):
             if chat["role"] == "user":
-                st.write(f'<div class="message"><span>{chat["message"]}</span></div>', unsafe_allow_html=True)
+                st.write(f'<div class="message user"><span>{chat["message"]}</span></div>', unsafe_allow_html=True)
             else:
-                st.write(f'<div class="message"><span>{chat["message"]}</span></div>', unsafe_allow_html=True)
-                st.write('</div>', unsafe_allow_html=True)
+                st.write(f'<div class="message pirate"><span>{chat["message"]}</span></div>', unsafe_allow_html=True)
+        st.write('</div>', unsafe_allow_html=True)
 
     control_container = cols[1].container()
     with control_container:
