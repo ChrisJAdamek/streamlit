@@ -60,18 +60,36 @@ def main():
         submit_button = st.form_submit_button("Send")
         
     st.markdown("""<style>
+        :root {
+            --bg-color-light: #f0f0f0;
+            --bg-color-dark: #d0d0d0;
+            --text-color-light: #000;
+            --text-color-dark: #fff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color-light: #3a3a3a;
+                --bg-color-dark: #202020;
+                --text-color-light: #fff;
+                --text-color-dark: #ddd;
+            }
+        }
+
         .chat-container {
             max-height: 500px;
             overflow-y: auto;
         }
         .message.user {
-            background-color: #f0f0f0;
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
             border-radius: 5px;
             padding: 5px;
             margin-bottom: 5px;
         }
         .message.pirate {
-            background-color: #d0d0d0;
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-dark);
             border-radius: 5px;
             padding: 5px;
             margin-bottom: 5px;
